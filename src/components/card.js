@@ -60,6 +60,7 @@ const cardAppender = (selector) => {
   axios.get("http://localhost:5000/api/articles")
     .then(res => {
       console.log(res);
+      const selectorElement = document.querySelector(selector);
 
       const articles = res.data.articles;
       const articlesArray = [].concat(
@@ -71,7 +72,23 @@ const cardAppender = (selector) => {
       );
       console.log(articlesArray);
       articlesArray.forEach(article => {
-          document.querySelector(selector).appendChild(Card(article));
+          selectorElement.appendChild(Card(article));
+      });
+
+      document.querySelectorAll("div.tab").forEach(tab => {
+        tab.addEventListener('click', evt => {
+          console.log(evt);
+          selectorElement.textContent = "";
+          if (evt.target.textContent === "node.js") {
+            articles.node.forEach(article => {
+              selectorElement.appendChild(Card(article));
+            });
+          } else {
+            articles[evt.target.textContent].forEach(article => {
+              selectorElement.appendChild(Card(article));
+            });
+          }
+        })
       });
     })
     .catch(err => {
